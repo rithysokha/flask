@@ -17,3 +17,11 @@ course_input_model = api.model("CourseInput", {
     "name": fields.String(required=True)
     })
 
+login_model = api.model("Login", {
+    "username": fields.String,
+    "password": fields.String
+})
+user_model = api.model("User", {
+    "id": fields.Integer,
+    "username": fields.String
+})
