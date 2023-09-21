@@ -1,7 +1,19 @@
 from flask_restx import Namespace, Resource
 from .api_models import course_model, student_model, course_input_model
 from .models import Course, Student, db
-ns = Namespace('api')
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
+authorizations = {
+    "jsonWebToken":{
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+    }
+}
+
+ns = Namespace('api', authorizations=authorizations)
+
+
 
 @ns.route('/')
 class HelloWorld(Resource):
@@ -10,9 +22,12 @@ class HelloWorld(Resource):
 
 @ns.route('/course')
 class CourseListApi(Resource):
+    method_decorators = [jwt_required()]
+    @ns.doc(security="jsonWebToken")
     @ns.marshal_list_with(course_model)
     @ns.marshal_with(course_model)
     def get(self):
+        
         return Course.query.all()
     @ns.expect(course_input_model)
     def post(self):
