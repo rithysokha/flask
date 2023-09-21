@@ -26,6 +26,29 @@ class CourseApi(Resource):
     @ns.marshal_with(course_model)
     def get(self, id):
         return Course.query.get(id)
+    
+    @ns.expect(course_input_model)
+    @ns.marshal_with(course_model)
+    def put(self, id):
+        course = Course.query.get(id)
+        course.name = ns.payload["name"]
+        db.session.commit()
+        return course
+    
+    def delete(self, id):
+        course = Course.query.get(id)
+        db.session.delete(course)
+        db.session.commit()
+        return '', 204
+
+    @ns.expect(course_input_model)
+    @ns.marshal_with(course_model)
+    def put(self, id):
+        course = Course.query.get(id)
+        course.name = ns.payload["name"]
+        db.session.commit()
+        return course
+    
 @ns.route('/student')
 class StudentApi(Resource):
     @ns.marshal_list_with(student_model)
