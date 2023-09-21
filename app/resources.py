@@ -9,7 +9,7 @@ class HelloWorld(Resource):
         return {'hello': 'world'}
 
 @ns.route('/course')
-class CourseApi(Resource):
+class CourseListApi(Resource):
     @ns.marshal_list_with(course_model)
     @ns.marshal_with(course_model)
     def get(self):
@@ -21,6 +21,11 @@ class CourseApi(Resource):
         db.session.commit()
         return course
 
+@ns.route('/course/<int:id>')
+class CourseApi(Resource):
+    @ns.marshal_with(course_model)
+    def get(self, id):
+        return Course.query.get(id)
 @ns.route('/student')
 class StudentApi(Resource):
     @ns.marshal_list_with(student_model)
